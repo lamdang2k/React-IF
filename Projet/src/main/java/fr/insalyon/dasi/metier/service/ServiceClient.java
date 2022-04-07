@@ -112,6 +112,7 @@ public class ServiceClient {
                 // on a trouve un intervenant
                 {
                     i.attribuerIntervenant(intervenant); //a verifier
+                    intervenant.addIntervToList(i);
                     interDao.creer(i);
                     JpaUtil.validerTransaction();
                     resultat = i.getId();
@@ -148,8 +149,6 @@ public class ServiceClient {
            // JpaUtil.fermerContextePersistance();
         }
         return resultat;
-         
-         
      }
      private Employe chercherEmployeDispo (LatLng coordonnesClient, int heure){
           Agence agencePlusProche = null;

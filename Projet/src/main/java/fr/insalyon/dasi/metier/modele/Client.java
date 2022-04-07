@@ -35,7 +35,7 @@ public class Client implements Serializable {
     private LatLng coordonnes;
     private String address;
     private String numTel;
-    
+    private ArrayList<Intervention> intervList[]; // <>
     
     protected Client() {
     }
@@ -49,6 +49,7 @@ public class Client implements Serializable {
         this.address = address;
         this.numTel = tel;
         this.coordonnes = GeoNetApi.getLatLng(address);
+        this.intervList = new ArrayList<Intervention>();
     }
 
     public Date getBirthdate() {
@@ -59,8 +60,6 @@ public class Client implements Serializable {
         return coordonnes;
 
     }
-    
-
 
     public String getAddress() {
         return address;
@@ -106,6 +105,7 @@ public class Client implements Serializable {
         return numTel;
     }
     
+    public ArrayList<Intervention> getIntervList() { return intervList;}
+    public void addIntervToList(Intervention i) { intervList.add(i); }
 
-    
 }

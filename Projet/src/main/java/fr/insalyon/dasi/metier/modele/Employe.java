@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import java.util.Date;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
-
+import java.util.ArrayList;
 
 /**
  *
@@ -39,7 +39,8 @@ public class Employe implements Serializable {
     private String numTel;
     @ManyToOne
     private Agence agence;
-    
+    private ArrayList<Intervention> intervList[]; // <>
+
     protected Employe() {
     }
 
@@ -56,14 +57,12 @@ public class Employe implements Serializable {
         this.disponible = estDisponible;
         this.distance = distance;
         this.numTel = numTel;
-       
+        this.intervList = new ArrayList<Intervention>();
     }
 
     public boolean estDisponible() {
         return disponible;
     }
-
-   
 
     public Date getBirthdate() {
         return birthdate;
@@ -80,9 +79,6 @@ public class Employe implements Serializable {
     public void setAgence(Agence agence) {
         this.agence = agence;
     }
-
-
-    
 
     public Long getId() {
         return id;
@@ -130,5 +126,7 @@ public class Employe implements Serializable {
         this.disponible = true;
     }
 
+    public ArrayList<Intervention> getIntervList() { return intervList;}
+    public void addIntervToList(Intervention i) { intervList.add(i); }
     
 }
