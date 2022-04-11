@@ -20,6 +20,8 @@ import fr.insalyon.dasi.metier.service.util.GeoNetApi;
  *
  * @author tdang
  */
+enum Civilite{M,MME,MLLE
+}
 @Entity
 public class Client implements Serializable {
     @Id
@@ -35,12 +37,13 @@ public class Client implements Serializable {
     private LatLng coordonnes;
     private String address;
     private String numTel;
+    private Civilite civil;
     
     
     protected Client() {
     }
 
-    public Client(String nom, String prenom, String mail, String motDePasse, Date date, String address, String tel) {
+    public Client(String civilite,String nom, String prenom, String mail, String motDePasse, Date date, String address, String tel) {
         this.nom = nom;
         this.prenom = prenom;
         this.mail = mail;
@@ -49,6 +52,21 @@ public class Client implements Serializable {
         this.address = address;
         this.numTel = tel;
         this.coordonnes = GeoNetApi.getLatLng(address);
+        if (null == civilite)this.civil = Civilite.M; //par defaut
+        
+        else switch (civilite) {
+            case "MME":
+            case "Mme":
+                this.civil = Civilite.MME;
+                break;
+            case "MLLE":
+            case "Mlle":
+                this.civil = Civilite.MLLE;
+                break;
+            default:
+                this.civil = Civilite.M; //par defaut
+                break;
+        }
     }
 
     public Date getBirthdate() {

@@ -19,11 +19,14 @@ import javax.persistence.Temporal;
  *
  * @author tdang
  */
+
+
 @Entity
 public class Employe implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Civilite civil;
     private String nom;
     private String prenom;
     @Column(unique = true)
@@ -43,7 +46,8 @@ public class Employe implements Serializable {
     protected Employe() {
     }
 
-    public Employe(String nom, String prenom, String mail, String motDePasse, Date birthdate, int heureDeb, int heureFin, boolean estDisponible, double distance, String numTel) {
+    public Employe(String civilite, String nom, String prenom, String mail, String motDePasse, Date birthdate, int heureDeb, int heureFin, boolean estDisponible, double distance, String numTel) {
+       
         this.nom = nom;
         this.prenom = prenom;
         this.mail = mail;
@@ -56,6 +60,21 @@ public class Employe implements Serializable {
         this.disponible = estDisponible;
         this.distance = distance;
         this.numTel = numTel;
+        if (null==civilite)this.civil = Civilite.M; //par defaut
+        
+        else switch (civilite) {
+            case "MME":
+            case "Mme":
+                this.civil = Civilite.MME;
+                break;
+            case "MLLE":
+            case "Mlle":
+                this.civil = Civilite.MLLE;
+                break;
+            default:
+                this.civil = Civilite.M; //par defaut
+                break;
+        }
        
     }
 
@@ -108,6 +127,10 @@ public class Employe implements Serializable {
         return mail;
     }
 
+    public double getDistance() {
+        return distance;
+    }
+    
     public void setMail(String mail) {
         this.mail = mail;
     }

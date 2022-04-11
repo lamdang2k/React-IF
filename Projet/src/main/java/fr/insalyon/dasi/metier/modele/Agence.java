@@ -36,14 +36,15 @@ public class Agence implements Serializable {
     public Agence() {
     }
 
-    public Agence(int nbEmpDispo, String address, List<Employe> listeEmp) {
-        this.nbEmpDispo = nbEmpDispo;
+    public Agence(String address, List<Employe> listeEmp) {
+       
         this.coordonnes = GeoNetApi.getLatLng(address);
         this.address = address;
         this.listeEmployes = listeEmp;
         for (Employe e : listeEmployes)
         {
             e.setAgence (this);
+            if (e.estDisponible()) this.nbEmpDispo++;
 
         }
     }

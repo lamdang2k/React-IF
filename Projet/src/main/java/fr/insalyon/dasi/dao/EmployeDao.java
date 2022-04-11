@@ -15,6 +15,10 @@ import javax.persistence.TypedQuery;
  * @author tdang
  */
 public class EmployeDao {
+    public void update(Employe e) {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        em.merge(e);
+    }
      public Employe getEmployeDispo(Agence a, int heure){
          Employe result = null;
          EntityManager em = JpaUtil.obtenirContextePersistance();

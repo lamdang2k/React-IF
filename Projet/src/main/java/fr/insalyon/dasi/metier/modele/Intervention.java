@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
 /**
@@ -22,7 +23,9 @@ public class Intervention implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
+    @ManyToOne
     protected Client demandeur;
+    @ManyToOne
     protected Employe employe;
     @Temporal(javax.persistence.TemporalType.DATE)
     protected Date dateDeb;
@@ -54,6 +57,11 @@ public class Intervention implements Serializable {
     public Client getDemandeur() {
         return demandeur;
     }
+
+    public Employe getEmploye() {
+        return employe;
+    }
+    
     
     public String getNomDemandeur() {
         return demandeur.getNom()+" "+ demandeur.getPrenom();
@@ -102,17 +110,17 @@ public class Intervention implements Serializable {
     public Date getDateDeb() {
         return dateDeb;
     }
+    public String getTypeIntervention(){
+        String className = this.getClass().getName(); //fr.insalyon.dasi.metier.modele.animal
+        String []cName = className.split("\\.");
+        return cName[cName.length-1]; //Animal only
+    }
 
-    public void setFinSucces() {
+    public void setDateFin() {
         this.dateFin = new Date();
-        this.statut = "Succes";
-        this.employe.setDispo(); 
     }
-    public void setFinEchec() {
-        this.dateFin = new Date();
-        this.statut = "Echec";
-        this.employe.setDispo(); 
-    }
+
+ 
 
     public void setCommentaire(String commentaire) {
         this.commentaire = commentaire;
@@ -125,6 +133,7 @@ public class Intervention implements Serializable {
     public void setEmploye(Employe employe) {
         this.employe = employe;
     }
+    
     
     public void attribuerIntervenant(Employe e)
     {
