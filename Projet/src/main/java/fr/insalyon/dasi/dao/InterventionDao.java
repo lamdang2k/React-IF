@@ -7,8 +7,7 @@ package fr.insalyon.dasi.dao;
 import fr.insalyon.dasi.metier.modele.Client;
 import fr.insalyon.dasi.metier.modele.Employe;
 import fr.insalyon.dasi.metier.modele.Intervention;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
+
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -80,6 +79,56 @@ public class InterventionDao {
         }
         else result = null;
         return result;
+     }
+     
+     
+     public List<Date> chercherDatesDebutIntervention(Employe e){
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        List<Date> result;
+        String succes = "Succes";
+        String echec = "Echec";
+        TypedQuery<Date> query = em.createQuery("SELECT i.dateDeb FROM Intervention i WHERE i.employe =:e AND i.statut =:succes OR i.statut =:echec ", Date.class);
+        query.setParameter("e", e);
+        query.setParameter("succes", succes);
+         query.setParameter("echec", echec);
+        List<Date> maListe= query.getResultList();
+        if(maListe.size() > 0){
+            result = maListe;
+        }
+        else result = null;
+        return result;
+     }
+     
+     
+     public List<Date> chercherDatesFinIntervention(Employe e){
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        List<Date> result;
+        String succes = "Succes";
+        String echec = "Echec";
+        TypedQuery<Date> query = em.createQuery("SELECT i.dateFin FROM Intervention i WHERE i.employe =:e AND i.statut =:succes OR i.statut =:echec ", Date.class);
+        query.setParameter("e", e);
+        query.setParameter("succes", succes);
+         query.setParameter("echec", echec);
+        List<Date> maListe= query.getResultList();
+        if(maListe.size() > 0){
+            result = maListe;
+        }
+        else result = null;
+        return result;
+     }
+     
+      public long compterInterventionsParEmploye(Employe e){
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(i) FROM Intervention i WHERE i.employe =:e",Long.class);
+        query.setParameter("e", e);
+        return query.getSingleResult();
+     }
+       public long compterInterventionsReussiesParEmploye(Employe e){
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(i) FROM Intervention i WHERE i.employe =:e AND i.statut =:statut",Long.class);
+         query.setParameter("statut", "Succes");
+        query.setParameter("e", e);
+        return query.getSingleResult();
      }
 }
   

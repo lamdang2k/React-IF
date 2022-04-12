@@ -12,6 +12,7 @@ import fr.insalyon.dasi.dao.EmployeDao;
 import fr.insalyon.dasi.dao.JpaUtil;
 import fr.insalyon.dasi.metier.modele.Employe;
 import fr.insalyon.dasi.metier.modele.Intervention;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,37 +45,20 @@ public class ServiceEmploye {
         return result;
     }
     
-    public String voirHistoriquesJournaliers(Employe e) {
+    public List<Intervention> voirHistoriquesJournaliers(Employe e) {
         //Service pour afficher historiques des interventions journalieres
         List<Intervention> histo = null;
-        String infos = "";
         JpaUtil.creerContextePersistance();
         try {
             histo = interDao.chercherInterventionsJournalieresEmploye(e);
-            infos += "**** Nombre d'interventions réalisées aujourd'hui: " + histo.size() + " ****\r\n";
             
-            infos += "**** Liste des interventions realisées aujourd'hui ****\r\n";
-            if (histo!=null)
-            {
-                for (Intervention i : histo)
-                {
-                    infos +=  "Type d'intervention : "+ i.getTypeIntervention(); //Animal only
-                    infos += " - Debut : "+ i.getDateDeb().toString();
-                    infos += " - Fin :" + i.getDateFin().toString();
-                    infos += " - Client : " + i.getDemandeur().getNom();
-                    infos += " - Lieu : " + i.getDemandeur().getAddress();
-                    infos += " - Statut actuel : "+ i.getStatut();
-                    infos += "\r\n";
-                    
-                }
-            }
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service voirHistoriquesJournaliers", ex);
-            infos = null;
+            histo = null;
         } finally {
             JpaUtil.fermerContextePersistance();
         }
-        return infos;
+        return histo;
     }
     public Intervention afficherInterventionEnCours(Employe e){
         //Service pour afficher interventions en cours -> Correspond au bouton En Cours
@@ -120,6 +104,50 @@ public class ServiceEmploye {
         return resultat;
         
     }
+     public double calculerTauxReussite(Employe e)
+     {
+         double resultat = 0;
+         JpaUtil.creerContextePersistance();
+        try {
+            long nbInter = interDao.compterInterventionsParEmploye(e);
+            long nbSucces = interDao.compterInterventionsReussiesParEmploye(e);
+            if (nbInter !=0) resultat = nbSucces/nbInter;
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service calculerTauxReussite", ex);
+            resultat = 0;
+        } finally {
+             JpaUtil.fermerContextePersistance();
+        }
+        return resultat;
+         
+     }
+     
+     public double calculerDureeMoyenne(Employe e)
+     {
+         double diff_in_time = 0;
+         double avg_in_time = 0;
+         double avg_in_min = 0;
+         JpaUtil.creerContextePersistance();
+        try {
+            List<Date> datesDeb = interDao.chercherDatesDebutIntervention(e);
+            List<Date> datesFin = interDao.chercherDatesFinIntervention(e);
+            for(int i = 0; i<datesDeb.size();i++){
+                {
+                    diff_in_time += datesFin.get(i).getTime() - datesDeb.get(i).getTime(); 
+                }
+                 avg_in_time= diff_in_time/datesDeb.size();
+                 avg_in_min= (avg_in_time/(1000*60))%60;
+            }
+               
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service calculerTauxReussite", ex);
+            avg_in_min = 0;
+        } finally {
+             JpaUtil.fermerContextePersistance();
+        }
+        return avg_in_min;
+         
+     }
      
 
 }

@@ -141,14 +141,14 @@ public class ServiceClient {
          
      }
      
-      public String voirHistoriques(Client c) {
+      public List<Intervention> voirHistoriques(Client c) {
           //Service pour afficher historiques des demandes
         List<Intervention>histo = null;
-        String infos ="";
+        //String infos ="";
         JpaUtil.creerContextePersistance();
         try {
             histo = interDao.chercherInterventionParClient(c);
-            infos += "**** Nombre de demandes d'intervention : " + histo.size() + " ****\r\n";
+            /*infos += "**** Nombre de demandes d'intervention : " + histo.size() + " ****\r\n";
             
             infos += "**** Liste des demandes d'intervention ****\r\n";
             if (histo!=null)
@@ -165,15 +165,15 @@ public class ServiceClient {
                     infos += " - Statut actuel : "+ i.getStatut();
                     infos += "\r\n";
                 }
-            }
+            }*/
             
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service voirHistoriques", ex);
-            infos = null;
+            histo = null;
         } finally {
             JpaUtil.fermerContextePersistance();
         }
-        return infos;
+        return histo;
     }
      
      private Employe chercherEmployeDispo (LatLng coordonnesClient, int heure){

@@ -126,16 +126,16 @@ public class Main {
         
         
        Client c1 = new Client("M","BORROTI MATIAS DANTAS", "Raphaël", "rborrotimatiasdantas4171@free.fr", "mdp1234",d1 , "8 Rue Arago, Villeurbanne","0328178508");
-       Client c2 = new Client("Mme","OLMEADA MARAIS", "Nor", "nolmeadamarais1551@gmail.com", "mdp1234",d2 , "5 Rue Léon Fabre, Villeurbanne","0418932546");
-       Client c3 = new Client("M","RINERD", "Julien", "jrinerd5241@yahoo.com", "mdp1234",d10 , "4 Rue de la Jeunesse, Villeurbanne","0727252485");
+       Client c2 = new Client("Mme","OLMEADA MARAIS", "Nor", "nolmeadamarais1551@gmail.com", "mdp1234",d2 , "3 Rue Léon Fabre, Villeurbanne","0418932546");
+       Client c3 = new Client("M","RINERD", "Julien", "jrinerd5241@yahoo.com", "mdp1234",d10 , "10 Rue de la Jeunesse, Villeurbanne","0727252485");
        
        // INITIALISATION DES EMPLOYES
-       Employe e1 = new Employe ("Mme","SING", "Ainhoa", "asing8183@free.fr", "mdp1234",d4 ,0, 24, true, 0, "0705224200");
+       Employe e1 = new Employe ("Mme","SING", "Ainhoa", "asing8183@free.fr", "mdp1234",d4 ,12, 17, true, 0, "0705224200");
        Employe e2 = new Employe ("M","ABDIULLINA", "David Alexander", "david-alexander.abdiullina@laposte.net", "mdp1234",d5 ,0, 5, true, 10,"0590232772");
-       Employe e3 = new Employe ("M","WOAGNER", "Moez", "moez.woagner@laposte.net", "mdp1234",d6 ,0, 24, true, 5,"0832205629");
-       Employe e4 = new Employe ("M","HONRY","Matteo", "matteo.honry@yahoo.com", "mdp1234", d7, 0,6,true,6,"0482381862");
-       Employe e5 = new Employe ("M","CECCANI","Kevin","kevin.ceccani@hotmail.com", "mdp1234",d8,0,6,true,2, "0664426037");
-       Employe e6= new Employe ("Mme","VOYRET","Alice","alice.voyret@hotmail.com", "mdp1234",d9,0,24,true,8, "0486856520");
+       Employe e3 = new Employe ("M","WOAGNER", "Moez", "moez.woagner@laposte.net", "mdp1234",d6 ,14, 19, true, 5,"0832205629");
+       Employe e4 = new Employe ("M","HONRY","Matteo", "matteo.honry@yahoo.com", "mdp1234", d7, 9,17,true,6,"0482381862");
+       Employe e5 = new Employe ("M","CECCANI","Kevin","kevin.ceccani@hotmail.com", "mdp1234",d8,8,14,true,2, "0664426037");
+       Employe e6= new Employe ("Mme","VOYRET","Alice","alice.voyret@hotmail.com", "mdp1234",d9,0,5,true,8, "0486856520");
         //INITIALISATION DES AGENCES
        List <Employe> listeEmpA1 = new LinkedList <Employe>();
        listeEmpA1.add(e1);
@@ -251,8 +251,11 @@ public class Main {
                 case 1:
                     if (i!= null) 
                     {
+                        String statut ;
                         String commentaire = Saisie.lireChaine("Commentaire pour cette cloture d'intervention: ");
-                        String statut = Saisie.lireChaine("Statut de cloture : ");
+                        Integer choixStatut = Saisie.lireInteger("Statut de cloture [1] Succes [2] Echec : ");
+                        if (choixStatut ==1)  statut = "Succes";
+                        else statut = "Echec";
                         Integer valide = Saisie.lireInteger("Tapez [1] pour valider votre cloture");
                        if (valide == 1)
                        {
@@ -382,7 +385,25 @@ public class Main {
         System.out.println();
         
         ServiceEmploye serviceEmp = new ServiceEmploye();
-        String infos = serviceEmp.voirHistoriquesJournaliers(login);
+        List<Intervention> histo = serviceEmp.voirHistoriquesJournaliers(login);
+        String infos = "";
+        infos += "**** Nombre d'interventions réalisées aujourd'hui: " + histo.size() + " ****\r\n";
+            
+        infos += "**** Liste des interventions realisées aujourd'hui ****\r\n";
+        if (histo.size()>0)
+            {
+                for (Intervention i : histo)
+                {
+                    infos +=  "Type d'intervention : "+ i.getTypeIntervention(); //Animal only
+                    infos += " - Debut : "+ i.getDateDeb().toString();
+                    infos += " - Fin :" + i.getDateFin().toString();
+                    infos += " - Client : " + i.getDemandeur().getNom();
+                    infos += " - Lieu : " + i.getDemandeur().getAddress();
+                    infos += " - Statut actuel : "+ i.getStatut();
+                    infos += "\r\n";
+                    
+                }
+            }
         infos += "\r\n**** Distance parcourue aujourd'hui: " + (int)login.getDistance() + " km. \r\n****";
         System.out.print(infos);
         System.out.print("\r\n");
@@ -397,7 +418,24 @@ public class Main {
         
         ServiceClient serviceCli = new ServiceClient();
        
-        String infos = serviceCli.voirHistoriques(login);
+        List<Intervention> histo = serviceCli.voirHistoriques(login);
+        String infos ="";
+        infos += "**** Nombre de demandes d'intervention : " + histo.size() + " ****\r\n";    
+        infos += "**** Liste des demandes d'intervention ****\r\n";		
+        if (histo.size()>0)
+            {
+                for (Intervention i : histo)
+                {
+                    infos +=  "Type d'intervention : "+ i.getTypeIntervention(); //Animal only
+                    infos += " - Debut : "+ i.getDateDeb().toString();
+                    infos += " - Fin :" + i.getDateFin().toString();
+                    infos += " - Intervenant : " + i.getNomIntervenant();
+                    infos += " - Statut actuel : "+ i.getStatut();
+                    infos += "\r\n";
+                }
+            }
+            
+        
         System.out.println(infos);
         System.out.println();   
      }
@@ -452,9 +490,15 @@ public class Main {
                     String warning = "> Numéro saisi invalide. Il faut choisir entre 0 et " + (size-1);
                     idInter = Saisie.lireInteger(warning);
                 }
-                    Intervention annulee = enCours.get(idInter);
-                    Employe e = service.annulerIntervention(enCours.get(idInter));
-                    if (e==null){
+                Intervention annulee = null;
+                Employe e = null;
+                 Integer valide = Saisie.lireInteger("Tapez [1] pour valider votre annulation");
+                 if (valide == 1)
+                 {
+                    annulee = enCours.get(idInter);
+                    e = service.annulerIntervention(enCours.get(idInter));
+                 }
+                 if (e==null){
                          sms = "";
                         objet = "Echec de l'annulation de votre demande";
                         corps = "Desole! ";
@@ -478,7 +522,19 @@ public class Main {
     {
         //taux de reussite
         //duree moyenne pour traiter une intervention
-        // Type d'intervention recue le plus
+        // Type d'intervention reçue le plus
+        ServiceEmploye service = new ServiceEmploye();
+        System.out.println("**************************");
+        System.out.println("** CONSULTATION DE STATISTIQUE D'EMPLOYE **");
+        System.out.println("**************************");
+        double taux = service.calculerTauxReussite(e);
+        double moyenne= service.calculerDureeMoyenne(e);
+        System.out.println("** Taux de réussite: " + taux*100 + " % **" );
+        System.out.println("**---------------------------------------- **" );
+        System.out.println("** Durée moyenne pour traiter une intervention : " + moyenne + "minute(s) **" );
+        System.out.println("**---------------------------------------- **" );
+        System.out.println(" Bravo pour ton travail ! " );
+        
     }
    
     
