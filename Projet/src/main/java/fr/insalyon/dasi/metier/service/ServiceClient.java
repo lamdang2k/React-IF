@@ -31,25 +31,23 @@ public class ServiceClient {
     protected InterventionDao interDao = new InterventionDao();
     protected AgenceDao agenceDao = new AgenceDao();
     protected EmployeDao employeDao = new EmployeDao();
-    
-
 
     public Long inscrireClient(Client client) {
-     //Service pour creer un nouveau client
+        // Service pour creer un nouveau client
         Long resultat = null;
         JpaUtil.creerContextePersistance();
         try {
-                Client result = clientDao.verifierMail(client.getMail());
-                if(result == null)
-                {
+            Client result = clientDao.verifierMail(client.getMail());
+            if (result == null) {
                 JpaUtil.ouvrirTransaction();
                 clientDao.creer(client);
                 JpaUtil.validerTransaction();
                 resultat = client.getId();
-                }
-            
+            }
+
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service inscrireClient(client)", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING,
+                    "Exception lors de l'appel au Service inscrireClient(client)", ex);
             JpaUtil.annulerTransaction();
             resultat = null;
         } finally {
@@ -59,41 +57,43 @@ public class ServiceClient {
     }
 
     public Client seAuthentifierClient(String mail, String mdp) {
-        //Service pour authentifier un client existant
+        // Service pour authentifier un client existant
         Client result = null;
         JpaUtil.creerContextePersistance();
         try {
             result = clientDao.seConnecter(mail, mdp);
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service rechercherClientParId(id)", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING,
+                    "Exception lors de l'appel au Service rechercherClientParId(id)", ex);
             result = null;
         } finally {
             JpaUtil.fermerContextePersistance();
         }
         return result;
     }
-     public Long demanderIntervention (Intervention i) {
-         //Service pour demander une nouvelle intervention
+
+    public Long demanderIntervention(Intervention i) {
+        // Service pour demander une nouvelle intervention
         Long resultat = null;
         JpaUtil.creerContextePersistance();
         try {
-                JpaUtil.ouvrirTransaction();
-                LatLng coordiClient = i.getDemandeur().getCoordonnes();
-                int heureDemande = i.getDateDeb().getHours();
-                Employe intervenant  = chercherEmployeDispo(coordiClient,heureDemande);
-                //chercher agence le plus proche qui a des employes dispos
-                if (intervenant != null)
-                // on a trouve un intervenant
-                {
-                    i.attribuerIntervenant(intervenant); //attributer l'intervennant pour cette intervention
-                    interDao.creer(i);
-                    JpaUtil.validerTransaction();
-                    resultat = i.getId();
-                }
-                    
-            
+            JpaUtil.ouvrirTransaction();
+            LatLng coordiClient = i.getDemandeur().getCoordonnes();
+            int heureDemande = i.getDateDeb().getHours();
+            Employe intervenant = chercherEmployeDispo(coordiClient, heureDemande);
+            // chercher agence le plus proche qui a des employes dispos
+            if (intervenant != null)
+            // on a trouve un intervenant
+            {
+                i.attribuerIntervenant(intervenant); // attributer l'intervennant pour cette intervention
+                interDao.creer(i);
+                JpaUtil.validerTransaction();
+                resultat = i.getId();
+            }
+
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service creerIntervention(intervention)", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING,
+                    "Exception lors de l'appel au Service creerIntervention(intervention)", ex);
             JpaUtil.annulerTransaction();
             resultat = null;
         } finally {
@@ -101,72 +101,80 @@ public class ServiceClient {
         }
         return resultat;
     }
-     public List<Intervention> listerInterventionEnCours (Client c)
-     //Service pour lister des interventions en cours -> Pour annuler 
-     {
+
+    public List<Intervention> listerInterventionEnCours(Client c)
+    // Service pour lister des interventions en cours -> Pour annuler
+    {
         JpaUtil.creerContextePersistance();
-        List <Intervention> resultat = null;
+        List<Intervention> resultat = null;
         try {
-                
-                List <Intervention> enCours = interDao.chercherInterventionEnCoursParClient(c);
-                resultat = enCours;
+
+            List<Intervention> enCours = interDao.chercherInterventionEnCoursParClient(c);
+            resultat = enCours;
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service listerInterventionEnCours", ex);
-            //JpaUtil.annulerTransaction();
+            Logger.getAnonymousLogger().log(Level.WARNING,
+                    "Exception lors de l'appel au Service listerInterventionEnCours", ex);
+            // JpaUtil.annulerTransaction();
             resultat = null;
         } finally {
-           JpaUtil.fermerContextePersistance();
+            JpaUtil.fermerContextePersistance();
         }
         return resultat;
-         
-     }
-     public Employe annulerIntervention (Intervention i){
-        //Service pour annuler une intervention en cours
-         Employe resultat = null;
-         JpaUtil.creerContextePersistance();
+
+    }
+
+    public Employe annulerIntervention(Intervention i) {
+        // Service pour annuler une intervention en cours
+        Employe resultat = null;
+        JpaUtil.creerContextePersistance();
         try {
-                JpaUtil.ouvrirTransaction();
-                i.setStatut("Annulée");
-                interDao.update(i);
-                JpaUtil.validerTransaction();
-                resultat = i.getEmploye(); 
+            JpaUtil.ouvrirTransaction();
+            i.setStatut("Annulée");
+            interDao.update(i);
+            JpaUtil.validerTransaction();
+            resultat = i.getEmploye();
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service creerIntervention(intervention)", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING,
+                    "Exception lors de l'appel au Service creerIntervention(intervention)", ex);
             JpaUtil.annulerTransaction();
             resultat = null;
         } finally {
-           JpaUtil.fermerContextePersistance();
+            JpaUtil.fermerContextePersistance();
         }
         return resultat;
-         
-     }
-     
-      public List<Intervention> voirHistoriques(Client c) {
-          //Service pour afficher historiques des demandes
-        List<Intervention>histo = null;
-        //String infos ="";
+
+    }
+
+    public List<Intervention> voirHistoriques(Client c) {
+        // Service pour afficher historiques des demandes
+        List<Intervention> histo = null;
+        // String infos ="";
         JpaUtil.creerContextePersistance();
         try {
             histo = interDao.chercherInterventionParClient(c);
-            /*infos += "**** Nombre de demandes d'intervention : " + histo.size() + " ****\r\n";
-            
-            infos += "**** Liste des demandes d'intervention ****\r\n";
-            if (histo!=null)
-            {
-                for (Intervention i : histo)
-                {
-                   
-                    String className = i.getClass().getName(); //fr.insalyon.dasi.metier.modele.animal
-                    String []cName = className.split("\\.");
-                    infos +=  "Type d'intervention : "+ cName[cName.length-1]; //Animal only
-                    infos += " - Debut : "+ i.getDateDeb().toString();
-                    infos += " - Fin :" + i.getDateFin().toString();
-                    infos += " - Intervenant : " + i.getNomIntervenant();
-                    infos += " - Statut actuel : "+ i.getStatut();
-                    infos += "\r\n";
-                }
-            }*/
-            
+            /*
+             * infos += "**** Nombre de demandes d'intervention : " + histo.size() +
+             * " ****\r\n";
+             * 
+             * infos += "**** Liste des demandes d'intervention ****\r\n";
+             * if (histo!=null)
+             * {
+             * for (Intervention i : histo)
+             * {
+             * 
+             * String className = i.getClass().getName();
+             * //fr.insalyon.dasi.metier.modele.animal
+             * String []cName = className.split("\\.");
+             * infos += "Type d'intervention : "+ cName[cName.length-1]; //Animal only
+             * infos += " - Debut : "+ i.getDateDeb().toString();
+             * infos += " - Fin :" + i.getDateFin().toString();
+             * infos += " - Intervenant : " + i.getNomIntervenant();
+             * infos += " - Statut actuel : "+ i.getStatut();
+             * infos += "\r\n";
+             * }
+             * }
+             */
+
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service voirHistoriques", ex);
             histo = null;
@@ -175,51 +183,47 @@ public class ServiceClient {
         }
         return histo;
     }
-     
-     private Employe chercherEmployeDispo (LatLng coordonnesClient, int heure){
-         //Service prive pour chercher un employe disponible pour realiser intervention demandee
-          Agence agencePlusProche = null;
-          Employe intervenant = null;
+
+    private Employe chercherEmployeDispo(LatLng coordonnesClient, int heure) {
+        // Service prive pour chercher un employe disponible pour realiser intervention
+        // demandee
+        Agence agencePlusProche = null;
+        Employe intervenant = null;
         try {
-            List <Agence> maListeA = agenceDao.listerAgences();
-            TreeMap <Double, Agence> mapAgence = new TreeMap();
-    
-            for (Agence a : maListeA)
-            {
+            List<Agence> maListeA = agenceDao.listerAgences();
+            TreeMap<Double, Agence> mapAgence = new TreeMap();
+
+            for (Agence a : maListeA) {
                 LatLng coordonnesAgence = a.getCoordonnes();
-                double tempsTrajet = GeoNetApi.getTripDurationByBicycleInMinute(coordonnesAgence, coordonnesClient); //a verifier
-                if(a.getNbEmpDispo()>0)
-                {
-                    mapAgence.put(tempsTrajet,a);
+                double tempsTrajet = GeoNetApi.getTripDurationByBicycleInMinute(coordonnesAgence, coordonnesClient); // a
+                                                                                                                     // verifier
+                if (a.getNbEmpDispo() > 0) {
+                    mapAgence.put(tempsTrajet, a);
                 }
             }
-            
-           
-            if (mapAgence.size()>0)
-            {
+
+            if (mapAgence.size() > 0) {
                 agencePlusProche = mapAgence.get(mapAgence.firstKey());
-                Employe e = employeDao.getEmployeDispo(agencePlusProche,heure);
-               if (e!=null) 
-                   {
-                       
-                        intervenant = e; //We found an available employee
-                        double disNouvParcours = 2*GeoNetApi.getTripDistanceByCarInKm(coordonnesClient, agencePlusProche.getCoordonnes()); //aller-retour
-                        intervenant.setDistance(disNouvParcours);
-                        agencePlusProche.majNbEmpDispoDebut(); 
-                   }
-            }  
-            
-            
-            
+                Employe e = employeDao.getEmployeDispo(agencePlusProche, heure);
+                if (e != null) {
+
+                    intervenant = e; // We found an available employee
+                    double disNouvParcours = 2
+                            * GeoNetApi.getTripDistanceByCarInKm(coordonnesClient, agencePlusProche.getCoordonnes()); // aller-retour
+                    intervenant.setDistance(disNouvParcours);
+                    agencePlusProche.majNbEmpDispoDebut();
+                }
+            }
+
         } catch (Exception ex) {
-            //ex.printStackTrace();
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service chercherEmployeDispo", ex);
+            // ex.printStackTrace();
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service chercherEmployeDispo",
+                    ex);
             intervenant = null;
         } finally {
-           
+
         }
         return intervenant;
 
     }
 }
-
