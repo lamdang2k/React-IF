@@ -10,7 +10,8 @@ import fr.insalyon.dasi.metier.service.util.GeoNetApi;
 public class TestGeoNetApi {
 
     /*
-     * Méthode main() de test pour l'utilisation de l'API GeoNet utilisant l'API Google Maps
+     * Méthode main() de test pour l'utilisation de l'API GeoNet utilisant l'API
+     * Google Maps
      */
     public static void main(String[] args) {
 
@@ -41,13 +42,17 @@ public class TestGeoNetApi {
         System.out.println("Durée de Trajet à Vélo de Adresse #1 à Adresse #3 (trajet direct): " + duree + " min");
 
         Double distance = GeoNetApi.getTripDistanceByCarInKm(coords1, coords3, coords2);
-        System.out.println("Distance en Voiture de Adresse #1 à Adresse #3 en passant par Adresse #2 (distance par la route): " + distance + " km");
+        System.out.println(
+                "Distance en Voiture de Adresse #1 à Adresse #3 en passant par Adresse #2 (distance par la route): "
+                        + distance + " km");
 
         Double distanceVolDOiseau = GeoNetApi.getFlightDistanceInKm(coords1, coords3);
-        System.out.println("Distance à Vol d'Oiseau de Adresse #1 à Adresse #3 (distance géographique): " + distanceVolDOiseau + " km");
+        System.out.println("Distance à Vol d'Oiseau de Adresse #1 à Adresse #3 (distance géographique): "
+                + distanceVolDOiseau + " km");
 
         Double autreDistanceVolDOiseau = GeoNetApi.getFlightDistanceInKm(coords1, coords4);
-        System.out.println("Distance à Vol d'Oiseau de Adresse #1 à Coords #4 (distance géographique): " + autreDistanceVolDOiseau + " km");
+        System.out.println("Distance à Vol d'Oiseau de Adresse #1 à Coords #4 (distance géographique): "
+                + autreDistanceVolDOiseau + " km");
 
         System.out.println("[FIN] Fin du Test");
         System.exit(0);
