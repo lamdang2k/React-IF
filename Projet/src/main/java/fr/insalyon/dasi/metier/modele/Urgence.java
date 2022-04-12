@@ -19,8 +19,7 @@ public class Urgence extends Intervention {
     }
 
     public Urgence(Date dateDeb, Date dateFin, String commentaire, String statut, String description, Client c) {
-        super(dateDeb, dateFin, commentaire, statut, description,c);
+        super(dateDeb, dateFin, commentaire, statut, description, c);
     }
-    
-    
+
 }

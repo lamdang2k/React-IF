@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package fr.insalyon.dasi.metier.modele;
+
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,13 +16,14 @@ import javax.persistence.Temporal;
 import com.google.maps.model.LatLng;
 import fr.insalyon.dasi.metier.service.util.GeoNetApi;
 
-
 /**
  *
  * @author tdang
  */
-enum Civilite{M,MME,MLLE
+enum Civilite {
+    M, MME, MLLE
 }
+
 @Entity
 public class Client implements Serializable {
     @Id
@@ -30,7 +32,7 @@ public class Client implements Serializable {
     private String nom;
     private String prenom;
     @Column(unique = true)
-    private String mail; //question 5
+    private String mail; // question 5
     private String motDePasse;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date birthdate;
@@ -38,12 +40,12 @@ public class Client implements Serializable {
     private String address;
     private String numTel;
     private Civilite civil;
-    
-    
+
     protected Client() {
     }
 
-    public Client(String civilite,String nom, String prenom, String mail, String motDePasse, Date date, String address, String tel) {
+    public Client(String civilite, String nom, String prenom, String mail, String motDePasse, Date date, String address,
+            String tel) {
         this.nom = nom;
         this.prenom = prenom;
         this.mail = mail;
@@ -52,21 +54,23 @@ public class Client implements Serializable {
         this.address = address;
         this.numTel = tel;
         this.coordonnes = GeoNetApi.getLatLng(address);
-        if (null == civilite)this.civil = Civilite.M; //par defaut
-        
-        else switch (civilite) {
-            case "MME":
-            case "Mme":
-                this.civil = Civilite.MME;
-                break;
-            case "MLLE":
-            case "Mlle":
-                this.civil = Civilite.MLLE;
-                break;
-            default:
-                this.civil = Civilite.M; //par defaut
-                break;
-        }
+        if (null == civilite)
+            this.civil = Civilite.M; // par defaut
+
+        else
+            switch (civilite) {
+                case "MME":
+                case "Mme":
+                    this.civil = Civilite.MME;
+                    break;
+                case "MLLE":
+                case "Mlle":
+                    this.civil = Civilite.MLLE;
+                    break;
+                default:
+                    this.civil = Civilite.M; // par defaut
+                    break;
+            }
     }
 
     public Date getBirthdate() {
@@ -77,8 +81,6 @@ public class Client implements Serializable {
         return coordonnes;
 
     }
-    
-
 
     public String getAddress() {
         return address;
@@ -123,7 +125,5 @@ public class Client implements Serializable {
     public String getNumTel() {
         return numTel;
     }
-    
 
-    
 }

@@ -19,11 +19,13 @@ public class Livraison extends Intervention {
     public Livraison() {
     }
 
-    public Livraison(Date dateDeb, Date dateFin, String commentaire, String statut, String description, Client c, String nomObjet) {
+    public Livraison(Date dateDeb, Date dateFin, String commentaire, String statut, String description, Client c,
+            String nomObjet) {
         super(dateDeb, dateFin, commentaire, statut, description, c);
         this.name = nomObjet;
     }
-    
-    
-    public String getName() { return this.name; }
+
+    public String getName() {
+        return this.name;
+    }
 }

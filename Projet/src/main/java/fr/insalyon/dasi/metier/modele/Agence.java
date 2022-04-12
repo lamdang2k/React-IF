@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package fr.insalyon.dasi.metier.modele;
+
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +17,6 @@ import javax.persistence.Temporal;
 import com.google.maps.model.LatLng;
 import fr.insalyon.dasi.metier.service.util.GeoNetApi;
 import javax.persistence.OneToMany;
-
 
 /**
  *
@@ -32,35 +32,30 @@ public class Agence implements Serializable {
     private String address;
     @OneToMany(mappedBy = "agence")
     List<Employe> listeEmployes;
-    
+
     public Agence() {
     }
 
     public Agence(String address, List<Employe> listeEmp) {
-       
+
         this.coordonnes = GeoNetApi.getLatLng(address);
         this.address = address;
         this.listeEmployes = listeEmp;
-        for (Employe e : listeEmployes)
-        {
-            e.setAgence (this);
-            if (e.estDisponible()) this.nbEmpDispo++;
+        for (Employe e : listeEmployes) {
+            e.setAgence(this);
+            if (e.estDisponible())
+                this.nbEmpDispo++;
 
         }
     }
-
- 
 
     public List<Employe> getListeEmployes() {
         return listeEmployes;
     }
 
-   
     public LatLng getCoordonnes() {
         return coordonnes;
     }
-
-
 
     public String getAddress() {
         return address;
@@ -75,16 +70,13 @@ public class Agence implements Serializable {
     }
 
     public void majNbEmpDispoDebut() {
-        //Quand un employé commence à réaliser une intervention
-        this.nbEmpDispo = this.nbEmpDispo-1;
+        // Quand un employé commence à réaliser une intervention
+        this.nbEmpDispo = this.nbEmpDispo - 1;
     }
+
     public void majNbEmpDispoFin() {
-        //Quand un employé termine une intervention
-        this.nbEmpDispo = this.nbEmpDispo+1;
+        // Quand un employé termine une intervention
+        this.nbEmpDispo = this.nbEmpDispo + 1;
     }
-    
 
-    
-
-   
 }

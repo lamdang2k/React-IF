@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package fr.insalyon.dasi.metier.modele;
+
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,12 +15,10 @@ import java.util.Date;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
-
 /**
  *
  * @author tdang
  */
-
 
 @Entity
 public class Employe implements Serializable {
@@ -30,11 +29,12 @@ public class Employe implements Serializable {
     private String nom;
     private String prenom;
     @Column(unique = true)
-    private String mail; //question 5
+    private String mail; // question 5
     private String motDePasse;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date birthdate;
-    //private double lat, lon; //ces attributs sont transférées dans la classe Agence
+    // private double lat, lon; //ces attributs sont transférées dans la classe
+    // Agence
     private int heureDeb;
     private int heureFin;
     private boolean disponible;
@@ -42,47 +42,48 @@ public class Employe implements Serializable {
     private String numTel;
     @ManyToOne
     private Agence agence;
-    
+
     protected Employe() {
     }
 
-    public Employe(String civilite, String nom, String prenom, String mail, String motDePasse, Date birthdate, int heureDeb, int heureFin, boolean estDisponible, double distance, String numTel) {
-       
+    public Employe(String civilite, String nom, String prenom, String mail, String motDePasse, Date birthdate,
+            int heureDeb, int heureFin, boolean estDisponible, double distance, String numTel) {
+
         this.nom = nom;
         this.prenom = prenom;
         this.mail = mail;
         this.motDePasse = motDePasse;
         this.birthdate = birthdate;
-        //this.lat = lat;
-        //this.lon = lon;
+        // this.lat = lat;
+        // this.lon = lon;
         this.heureDeb = heureDeb;
         this.heureFin = heureFin;
         this.disponible = estDisponible;
         this.distance = distance;
         this.numTel = numTel;
-        if (null==civilite)this.civil = Civilite.M; //par defaut
-        
-        else switch (civilite) {
-            case "MME":
-            case "Mme":
-                this.civil = Civilite.MME;
-                break;
-            case "MLLE":
-            case "Mlle":
-                this.civil = Civilite.MLLE;
-                break;
-            default:
-                this.civil = Civilite.M; //par defaut
-                break;
-        }
-       
+        if (null == civilite)
+            this.civil = Civilite.M; // par defaut
+
+        else
+            switch (civilite) {
+                case "MME":
+                case "Mme":
+                    this.civil = Civilite.MME;
+                    break;
+                case "MLLE":
+                case "Mlle":
+                    this.civil = Civilite.MLLE;
+                    break;
+                default:
+                    this.civil = Civilite.M; // par defaut
+                    break;
+            }
+
     }
 
     public boolean estDisponible() {
         return disponible;
     }
-
-   
 
     public Date getBirthdate() {
         return birthdate;
@@ -99,9 +100,6 @@ public class Employe implements Serializable {
     public void setAgence(Agence agence) {
         this.agence = agence;
     }
-
-
-    
 
     public Long getId() {
         return id;
@@ -130,7 +128,7 @@ public class Employe implements Serializable {
     public double getDistance() {
         return distance;
     }
-    
+
     public void setMail(String mail) {
         this.mail = mail;
     }
@@ -142,16 +140,15 @@ public class Employe implements Serializable {
     public void setMotDePasse(String motDePasse) {
         this.motDePasse = motDePasse;
     }
-    public void setDistance (double distNouvParcours)
-    {
-        //Mettre a jour des infos
+
+    public void setDistance(double distNouvParcours) {
+        // Mettre a jour des infos
         this.disponible = false;
-        this.distance += distNouvParcours; 
+        this.distance += distNouvParcours;
     }
-    public void setDispo ()
-    {
+
+    public void setDispo() {
         this.disponible = true;
     }
 
-    
 }

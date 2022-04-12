@@ -18,14 +18,14 @@ public class Animal extends Intervention {
 
     public Animal() {
     }
-    
 
-    public Animal(Date dateDeb, Date dateFin, String commentaire, String statut, String description, Client c, String nomAnimal) {
-        super(dateDeb, dateFin, commentaire, statut, description,c);
+    public Animal(Date dateDeb, Date dateFin, String commentaire, String statut, String description, Client c,
+            String nomAnimal) {
+        super(dateDeb, dateFin, commentaire, statut, description, c);
         this.name = nomAnimal;
     }
-    
-    
-    
-    public String getName() { return this.name; }
+
+    public String getName() {
+        return this.name;
+    }
 }

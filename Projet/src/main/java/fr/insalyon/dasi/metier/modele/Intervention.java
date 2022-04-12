@@ -32,16 +32,17 @@ public class Intervention implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     protected Date dateFin;
     protected String commentaire, statut, description;
-    
-    
-    /*public Intervention() {
-        this.dateDeb = new Date();
-        this.dateFin = null;
-        this.commentaire = "";
-        this.description = "";
-        this.statut = "awaiting";
-    }*/
-    
+
+    /*
+     * public Intervention() {
+     * this.dateDeb = new Date();
+     * this.dateFin = null;
+     * this.commentaire = "";
+     * this.description = "";
+     * this.statut = "awaiting";
+     * }
+     */
+
     public Intervention() {
     }
 
@@ -61,22 +62,23 @@ public class Intervention implements Serializable {
     public Employe getEmploye() {
         return employe;
     }
-    
-    
+
     public String getNomDemandeur() {
-        return demandeur.getNom()+" "+ demandeur.getPrenom();
+        return demandeur.getNom() + " " + demandeur.getPrenom();
     }
-    public String getNomIntervenant (){
-        return employe.getNom()+" " + employe.getPrenom();
+
+    public String getNomIntervenant() {
+        return employe.getNom() + " " + employe.getPrenom();
     }
-    
-    public String getNumTelIntervenant (){
+
+    public String getNumTelIntervenant() {
         return employe.getNumTel();
     }
-    public String getNumTelDemandeur (){
+
+    public String getNumTelDemandeur() {
         return demandeur.getNumTel();
     }
-    
+
     /**
      * Get the value of dateFin
      *
@@ -89,7 +91,6 @@ public class Intervention implements Serializable {
     public Long getId() {
         return id;
     }
-    
 
     public String getCommentaire() {
         return commentaire;
@@ -102,6 +103,7 @@ public class Intervention implements Serializable {
     public String getDescription() {
         return description;
     }
+
     /**
      * Get the value of dateDeb
      *
@@ -110,17 +112,16 @@ public class Intervention implements Serializable {
     public Date getDateDeb() {
         return dateDeb;
     }
-    public String getTypeIntervention(){
-        String className = this.getClass().getName(); //fr.insalyon.dasi.metier.modele.animal
-        String []cName = className.split("\\.");
-        return cName[cName.length-1]; //Animal only
+
+    public String getTypeIntervention() {
+        String className = this.getClass().getName(); // fr.insalyon.dasi.metier.modele.animal
+        String[] cName = className.split("\\.");
+        return cName[cName.length - 1]; // Animal only
     }
 
     public void setDateFin() {
         this.dateFin = new Date();
     }
-
- 
 
     public void setCommentaire(String commentaire) {
         this.commentaire = commentaire;
@@ -133,21 +134,18 @@ public class Intervention implements Serializable {
     public void setEmploye(Employe employe) {
         this.employe = employe;
     }
-    
-    
-    public void attribuerIntervenant(Employe e)
-    {
-       this.employe = e;
-       this.statut = "En cours";
-       this.dateDeb = new Date();
-       
+
+    public void attribuerIntervenant(Employe e) {
+        this.employe = e;
+        this.statut = "En cours";
+        this.dateDeb = new Date();
+
     }
-    public void annuler ()
-    {
+
+    public void annuler() {
         this.statut = "Annulee";
         this.dateFin = new Date();
-        
-    }
-    
-}
 
+    }
+
+}
